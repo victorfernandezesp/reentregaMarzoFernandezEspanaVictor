@@ -1,0 +1,61 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    text-align: center;
+}
+
+h2, h3 {
+    color: #333;
+}
+
+.juego {
+    margin-top: 20px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.displayjuego {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 16px;
+    margin: 2px;
+}
+
+.teclado {
+    margin-top: 20px;
+}
+
+.tecla {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+    margin: 2px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.tecla:hover {
+    background-color: #d3d3d3;
+}
+
+.tecla[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.tecla[disabled]:hover {
+    background-color: #ccc;
+}
+
+.mensaje {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+}
