@@ -13,32 +13,40 @@ const wordle = (function () {
     let intentosRestantes = 5;
 
     const inicializar = function () {
+        // Generar palabra aleatoria del array
         do {
             palabraAleatoria = listaPalabras[Math.floor(Math.random() * listaPalabras.length)].toUpperCase();
         } while (!palabraAleatoria);
         mostrarPalabra();
     };
 
+    // Devuelve la palabra aleatoria y muestra por consola
     const mostrarPalabra = function () {
         console.log(palabraAleatoria);
         return palabraAleatoria;
     };
 
+    // Comprueba si la palabra introducida es correcta
     const comprobarPalabra = function (letrasCorrectas) {
         const letras = [...palabraAleatoria];
 
         const resultado = ["", "", "", "", ""];
 
+        // Va comprobando letra a letra si es correcta
         letrasCorrectas.forEach((letra, posicion) => {
             if (letra === palabraAleatoria[posicion]) {
                 resultado[posicion] = "verde";
+                // Elimina la letra de la lista de letras
                 letras.splice(letras.indexOf(letra), 1);
             }
         });
 
+        // Comprueba si la letra no está en la lista de letras
         letrasCorrectas.forEach((letra, posicion) => {
             if (letra !== palabraAleatoria[posicion]) {
+                // Comprueba si la letra está en la lista de letras
                 let index = letras.indexOf(letra);
+                // Si está en la lista de letras, la pone en amarillo y la elimina de la lista de letras
                 if (index !== -1) {
                     resultado[posicion] = "amarillo";
                     letras.splice(index, 1);
@@ -48,6 +56,7 @@ const wordle = (function () {
             }
         });
 
+        // Comprueba si se ha ganado
         if (resultado.every(color => color === "verde")) {
             resultado.push("Has ganado");
         }
@@ -71,6 +80,7 @@ $(function () {
         const palabraSeleccionada = wordle.mostrarPalabra();
         let juegoTerminado = false;
 
+        // Deshabilita el teclado (Solo si se ha acabado)
         function deshabilitarTeclado() {
             $(".tecla").prop("disabled", true);
         }
@@ -115,6 +125,7 @@ $(function () {
             $("body").append(divTeclado);
         }
 
+        // Agrega el borrar al pulsar la tecla de borrar del teclado fisico
         function agregarFuncionalidad() {
             $(document.body).on("keydown", function (evento) {
                 if (evento.key === "Backspace") {
@@ -123,6 +134,7 @@ $(function () {
                     uls.eq(filaActual).children().eq(palabraUsuario.length).val("");
                 }
             });
+
 
             $(document.body).on("click", function (evento) {
                 if (juegoTerminado || $(evento.target).prop("tagName") !== "BUTTON") return;
@@ -134,6 +146,8 @@ $(function () {
                     palabraUsuario.pop();
                     uls.eq(filaActual).children().eq(palabraUsuario.length).val("");
                 } else if (textoObjetivo === "↲" && palabraUsuario.length === 5) {
+
+                    // Comprueba si la palabra es correcta
                     let letrasCorrectas = [];
                     palabraUsuario.forEach((letra, index) => {
                         letrasCorrectas.push(letra);
@@ -141,6 +155,9 @@ $(function () {
 
                     let intentosGuardados = wordle.comprobarPalabra(letrasCorrectas);
                     let cont = 0;
+
+                    // Muestra las letras en el tablero con su color correspondiente habiendolo comprobado antes mandandole 
+                    // las letras a la capa de negocio para que lo compruebe
                     intentosGuardados.forEach((letra, index) => {
                         const inputElemento = uls.eq(filaActual).children().eq(index);
                         if (letra === 'verde') {
@@ -164,14 +181,19 @@ $(function () {
                         }
                     });
                     filaActual++;
+
+                    // Limpia el array de letras y pasa a la siguiente fila
                     palabraUsuario = [];
                     cont = 0;
                     puntuacionAcumulada += 5;
 
+                    // Comprueba si se ha ganado
                     if (intentosGuardados.includes("Has ganado")) {
-                        deshabilitarTeclado(); 
-                        juegoTerminado = true; 
+                        deshabilitarTeclado();
+                        juegoTerminado = true;
                     }
+
+                    // Escribe la letras en el tablero
                 } else if (textoObjetivo !== "↲" && palabraUsuario.length !== 5) {
                     uls.eq(filaActual).children().eq(palabraUsuario.length).val(textoObjetivo.toUpperCase());
                     palabraUsuario.push(textoObjetivo);
