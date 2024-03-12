@@ -79,6 +79,7 @@ $(function () {
         let puntuacionAcumulada = 0;
         const palabraSeleccionada = wordle.mostrarPalabra();
         let juegoTerminado = false;
+        let contadorIntentos = 0;
 
         // Deshabilita el teclado (Solo si se ha acabado)
         function deshabilitarTeclado() {
@@ -146,7 +147,7 @@ $(function () {
                     palabraUsuario.pop();
                     uls.eq(filaActual).children().eq(palabraUsuario.length).val("");
                 } else if (textoObjetivo === "↲" && palabraUsuario.length === 5) {
-
+                    contadorIntentos++;
                     // Comprueba si la palabra es correcta
                     let letrasCorrectas = [];
                     palabraUsuario.forEach((letra, index) => {
@@ -191,8 +192,33 @@ $(function () {
                     if (intentosGuardados.includes("Has ganado")) {
                         deshabilitarTeclado();
                         juegoTerminado = true;
+                        // Crea un mensaje debajo de teclado que te dice que has ganado
+                        const $mensajeGanado = $("<h2>").html("Has ganado");
+                        $mensajeGanado.css({
+                            "color": "green",
+                            "position": "absolute",
+                            "top": "50%",
+                            "left": "50%",
+                            "transform": "translate(-50%, -50%)"
+                        });
+                        $("body").append($mensajeGanado);
                     }
+                    // Comprueba si se ha perdido
+                    if (contadorIntentos === 6 && !intentosGuardados.includes("Has ganado")) {
+                        deshabilitarTeclado();
+                        juegoTerminado = true;
+                        // Crea un mensaje debajo de teclado que te dice que has perdido
+                        const $mensajePerdido = $("<h2>").html("Has perdido");
+                        $mensajePerdido.css({
+                            "color": "red",
+                            "position": "absolute",
+                            "top": "50%",
+                            "left": "50%",
+                            "transform": "translate(-50%, -50%)"
+                        });
+                        $("body").append($mensajePerdido);
 
+                    }
                     // Escribe la letras en el tablero
                 } else if (textoObjetivo !== "↲" && palabraUsuario.length !== 5) {
                     uls.eq(filaActual).children().eq(palabraUsuario.length).val(textoObjetivo.toUpperCase());
